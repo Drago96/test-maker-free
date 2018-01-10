@@ -29,7 +29,7 @@ module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
     const sharedConfig = {
         stats: { modules: false },
-        resolve: { extensions: [ '.js' ] },
+        resolve: { extensions: ['.js'] },
         module: {
             rules: [
                 { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' }
@@ -43,7 +43,8 @@ module.exports = (env) => {
         plugins: [
             new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.ContextReplacementPlugin(/\@angular\b.*\b(bundles|linker)/, path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/11580
-            new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/14898
+            new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/14898,
+            new webpack.ContextReplacementPlugin(/\@angular(\\|\/)core(\\|\/)esm5/,path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/20357,
             new webpack.IgnorePlugin(/^vertx$/) // Workaround for https://github.com/stefanpenner/es6-promise/issues/100
         ]
     };
@@ -80,7 +81,7 @@ module.exports = (env) => {
             libraryTarget: 'commonjs2',
         },
         module: {
-            rules: [ { test: /\.css(\?|$)/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize' ] } ]
+            rules: [{ test: /\.css(\?|$)/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] }]
         },
         plugins: [
             new webpack.DllPlugin({
