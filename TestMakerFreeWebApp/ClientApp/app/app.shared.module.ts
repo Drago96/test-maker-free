@@ -11,6 +11,7 @@ import { QuizComponent } from "./components/quiz/quiz.component";
 import { AboutComponent } from "./components/about/about.component";
 import { HomeComponent } from "./components/home/home.component";
 import { PageNotFoundComponent } from "./components/pagenotfound/pagenotfound.component";
+import { QuizEditComponent } from './components/quiz/quiz-edit.component';
 import { LoginComponent } from './components/login/login.component';
 
 
@@ -23,7 +24,8 @@ import { LoginComponent } from './components/login/login.component';
         QuizComponent,
         AboutComponent,
         PageNotFoundComponent,
-        LoginComponent
+        LoginComponent,
+        QuizEditComponent
     ],
     imports: [
         CommonModule,
@@ -32,6 +34,8 @@ import { LoginComponent } from './components/login/login.component';
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
+            { path: 'quiz/create', component: QuizEditComponent },
+            { path: 'quiz/edit/:id', component: QuizEditComponent },
             { path: 'quiz/:id', component: QuizComponent },
             { path: 'about', component: AboutComponent },
             { path: 'login', component: LoginComponent },
