@@ -12,20 +12,13 @@ using TestMakerFreeWebApp.ViewModels;
 
 namespace TestMakerFreeWebApp.Controllers
 {
-    [Route("api/[controller]")]
-    public class QuizController : Controller
+    public class QuizController : BaseApiController
     {
-        #region Private Fields
-
-        private readonly ApplicationDbContext db;
-
-        #endregion
 
         #region Constructor
 
-        public QuizController(ApplicationDbContext db)
+        public QuizController(ApplicationDbContext db) : base(db)
         {
-            this.db = db;
         }
 
         #endregion
@@ -40,22 +33,16 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var quiz = this.db.Quizzes.FirstOrDefault(q => q.Id == id);
+            var quiz = this.Db.Quizzes.FirstOrDefault(q => q.Id == id);
 
             if (quiz == null)
             {
-                return NotFound(new
-                {
-                    Error = $"Quiz {id} has not been found."
-                });
+                return NotFound($"Quiz {id} has not been found.");
             }
 
             return new JsonResult(
                 quiz.Adapt<QuizViewModel>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+                this.JsonSettings);
         }
 
         /// <summary>
@@ -67,61 +54,60 @@ namespace TestMakerFreeWebApp.Controllers
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
-            if (model == null) return new StatusCodeResult(500);
+            if (model == null)
+            {
+                return BadRequest();
+            }
 
             // handle the insert (without object-mapping)
-            var quiz = new Quiz();
-
-            // properties taken from the request
-            quiz.Title = model.Title;
-            quiz.Description = model.Description;
-            quiz.Text = model.Text;
-            quiz.Notes = model.Notes;
+            var quiz = new Quiz
+            {
+                Title = model.Title,
+                Description = model.Description,
+                Text = model.Text,
+                Notes = model.Notes,
+                CreatedDate = DateTime.UtcNow
+            };
 
             // properties set from server-side
-            quiz.CreatedDate = DateTime.UtcNow;
             quiz.LastModifiedDate = quiz.CreatedDate;
 
             // Set a temporary author using the Admin user's userId
             // as user login isn't supported yet: we'll change this later on.
-            quiz.UserId = this.db.Users
+            quiz.UserId = this.Db.Users
                 .FirstOrDefault(u => u.Username == "Admin").Id;
 
             // add the new quiz
-            this.db.Quizzes.Add(quiz);
+            this.Db.Quizzes.Add(quiz);
             // persist the changes into the Database.
-            this.db.SaveChanges();
+            this.Db.SaveChanges();
             // return the newly-created Quiz to the client.
             return new JsonResult(quiz.Adapt<QuizViewModel>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+                this.JsonSettings);
         }
 
         /// <summary>
         /// Edit the Quiz with the given {id}
         /// </summary>
-        /// <param name="model>The QuizViewModel containing the data to update</param>
+        /// <param name="model">The QuizViewModel containing the data to update</param>
         [HttpPut]
         public IActionResult Put([FromBody]QuizViewModel model)
         {
             // return a generic HTTP Status 500 (Server Error)
             // if the client payload is invalid.
-            if (model == null) return new StatusCodeResult(500);
+            if (model == null)
+            {
+                return BadRequest();
+            }
 
             // retrieve the quiz to edit
-            var quiz = this.db.Quizzes.FirstOrDefault(q => q.Id ==
+            var quiz = this.Db.Quizzes.FirstOrDefault(q => q.Id ==
                                                     model.Id);
 
             // handle requests asking for non-existing quizzes
             if (quiz == null)
             {
-                return NotFound(new
-                {
-                    Error = String.Format("Quiz ID {0} has not been found",
-                        model.Id)
-                });
+                return NotFound($"Quiz ID {model.Id} has not been found");
             }
 
             // handle the update (without object-mapping)
@@ -136,14 +122,11 @@ namespace TestMakerFreeWebApp.Controllers
             quiz.LastModifiedDate = DateTime.UtcNow;
 
             // persist the changes into the Database.
-            this.db.SaveChanges();
+            this.Db.SaveChanges();
 
             // return the updated Quiz to the client.
             return new JsonResult(quiz.Adapt<QuizViewModel>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+                this.JsonSettings);
         }
 
         /// <summary>
@@ -154,26 +137,24 @@ namespace TestMakerFreeWebApp.Controllers
         public IActionResult Delete(int id)
         {
             // retrieve the quiz from the Database
-            var quiz = this.db.Quizzes
+            var quiz = this.Db.Quizzes
                 .FirstOrDefault(i => i.Id == id);
 
             // handle requests asking for non-existing quizzes
             if (quiz == null)
             {
-                return NotFound(new
-                {
-                    Error = String.Format("Quiz ID {0} has not been found", id)
-                });
+                return NotFound($"Quiz ID {id} has not been found");
             }
 
             // remove the quiz from the DbContext.
-            this.db.Quizzes.Remove(quiz);
+            this.Db.Quizzes.Remove(quiz);
 
             // persist the changes into the Database.
-            this.db.SaveChanges();
+            this.Db.SaveChanges();
 
             // return an HTTP Status 200 (OK).
-            return new OkResult();
+            return Ok();
+
         }
         #endregion
 
@@ -188,7 +169,7 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("latest/{num:int?}")]
         public IActionResult Latest(int num = 10)
         {
-            var latest = this.db.Quizzes
+            var latest = this.Db.Quizzes
                 .OrderByDescending(q => q.CreatedDate)
                 .Take(num)
                 .ToList();
@@ -196,10 +177,7 @@ namespace TestMakerFreeWebApp.Controllers
             // output the result in JSON format
             return new JsonResult(
                 latest.Adapt<List<QuizViewModel>>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+                this.JsonSettings);
         }
 
         /// <summary>
@@ -211,17 +189,14 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("bytitle/{num:int?}")]
         public IActionResult ByTitle(int num = 10)
         {
-            var byTitle = this.db.Quizzes
+            var byTitle = this.Db.Quizzes
                 .OrderBy(q => q.Title)
                 .Take(num)
                 .ToList();
 
             return new JsonResult(
                 byTitle.Adapt<List<QuizViewModel>>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+                this.JsonSettings);
         }
 
         /// <summary>
@@ -233,17 +208,14 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("random/{num:int?}")]
         public IActionResult Random(int num = 10)
         {
-            var random = this.db.Quizzes
+            var random = this.Db.Quizzes
                 .OrderBy(q => Guid.NewGuid())
                 .Take(num)
                 .ToList();
 
             return new JsonResult(
                 random.Adapt<List<QuizViewModel>>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+                this.JsonSettings);
         }
         #endregion
 

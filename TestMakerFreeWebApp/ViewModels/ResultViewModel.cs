@@ -24,6 +24,10 @@ namespace TestMakerFreeWebApp.ViewModels
 
         public string Text { get; set; }
 
+        public int? MinValue { get; set; }
+
+        public int? MaxValue { get; set; }
+
         public string Notes { get; set; }
 
         [DefaultValue(0)]
