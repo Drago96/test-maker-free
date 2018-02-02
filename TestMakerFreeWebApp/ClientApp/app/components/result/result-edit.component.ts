@@ -25,7 +25,7 @@ export class ResultEditComponent {
         this.editMode = this.activatedRoute.snapshot.url[1].path === 'edit';
 
         if (this.editMode) {
-            this.title = 'Edit Result'
+            this.title = 'Edit Result';
 
             const url = this.baseUrl + `api/result/${id}`;
             this.http.get<Result>(url).subscribe(result => {
@@ -34,7 +34,7 @@ export class ResultEditComponent {
                 error => console.error(error));
         } else {
             this.result.QuizId = id;
-            this.title = 'Create a new Result'
+            this.title = 'Create a new Result';
         }
 
     }

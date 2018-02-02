@@ -18,7 +18,8 @@ import { QuestionEditComponent } from "./components/question/question-edit.compo
 import { AnswerListComponent } from './components/answer/answer-list.component';
 import { AnswerEditComponent } from "./components/answer/answer-edit.component";
 import { ResultListComponent } from './components/result/result-list.component';
-import { ResultEditComponent } from './components/result/result-edit.component';
+import { ResultEditComponent } from './components/result/result-edit.component';
+import { QuizSearchComponent } from './components/quiz/quiz-search.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { ResultEditComponent } from './components/result/result-edit.component';
         AnswerListComponent,
         AnswerEditComponent,
         ResultListComponent,
-        ResultEditComponent
+        ResultEditComponent,
+        QuizSearchComponent
     ],
     imports: [
         CommonModule,
