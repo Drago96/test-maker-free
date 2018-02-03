@@ -5,7 +5,9 @@ using TestMakerFreeWebApp.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 
@@ -16,7 +18,10 @@ namespace TestMakerFreeWebApp.Controllers
 
         #region Constructor
 
-        public AnswerController(ApplicationDbContext db) : base(db)
+        public AnswerController(ApplicationDbContext db,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration) : base(db, roleManager, userManager, configuration)
         {
         }
 

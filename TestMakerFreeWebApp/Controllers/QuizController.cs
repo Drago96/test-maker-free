@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
@@ -17,7 +19,10 @@ namespace TestMakerFreeWebApp.Controllers
 
         #region Constructor
 
-        public QuizController(ApplicationDbContext db) : base(db)
+        public QuizController(ApplicationDbContext db,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration) : base(db, roleManager, userManager, configuration)
         {
         }
 
@@ -75,7 +80,7 @@ namespace TestMakerFreeWebApp.Controllers
             // Set a temporary author using the Admin user's userId
             // as user login isn't supported yet: we'll change this later on.
             quiz.UserId = this.Db.Users
-                .FirstOrDefault(u => u.Username == "Admin").Id;
+                .FirstOrDefault(u => u.UserName == "Admin").Id;
 
             // add the new quiz
             this.Db.Quizzes.Add(quiz);

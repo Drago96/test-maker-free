@@ -20,7 +20,7 @@ import { AnswerEditComponent } from "./components/answer/answer-edit.component";
 import { ResultListComponent } from './components/result/result-list.component';
 import { ResultEditComponent } from './components/result/result-edit.component';
 import { QuizSearchComponent } from './components/quiz/quiz-search.component';
-
+import { AuthService } from './services/auth.service';
 
 @NgModule({
     declarations: [
@@ -62,6 +62,9 @@ import { QuizSearchComponent } from './components/quiz/quiz-search.component';
             { path: 'login', component: LoginComponent },
             { path: '**', component: PageNotFoundComponent }
         ])
+    ],
+    providers:[
+        AuthService    
     ]
 })
 export class AppModuleShared {

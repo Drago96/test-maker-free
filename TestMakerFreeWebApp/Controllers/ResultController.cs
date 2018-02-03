@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
@@ -16,7 +18,10 @@ namespace TestMakerFreeWebApp.Controllers
     public class ResultController : BaseApiController
     {
         #region Constructor
-        public ResultController(ApplicationDbContext db) : base(db)
+        public ResultController(ApplicationDbContext db,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration) : base(db, roleManager, userManager, configuration)
         {
         }
         #endregion
