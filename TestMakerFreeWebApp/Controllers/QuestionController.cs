@@ -5,6 +5,7 @@ using TestMakerFreeWebApp.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using TestMakerFreeWebApp.Data;
@@ -52,6 +53,7 @@ namespace TestMakerFreeWebApp.Controllers
         /// </summary>
         /// <param name="model">The QuestionViewModel containing the data to insert</param>
         [HttpPost]
+        [Authorize]
         public IActionResult Post([FromBody]QuestionViewModel model)
         {
             if (model == null)
@@ -80,6 +82,7 @@ namespace TestMakerFreeWebApp.Controllers
         /// </summary>
         /// <param name="model">The QuestionViewModel containing the data to update</param>
         [HttpPut]
+        [Authorize]
         public IActionResult Put([FromBody]QuestionViewModel model)
         {
             if (model == null)
@@ -117,6 +120,7 @@ namespace TestMakerFreeWebApp.Controllers
         /// </summary>
         /// <param name="id">The ID of an existing Question</param>
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete(int id)
         {
             var question = this.Db.Questions.FirstOrDefault(q => q.Id == id);

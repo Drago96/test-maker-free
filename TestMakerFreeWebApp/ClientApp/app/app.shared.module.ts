@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app/app.component';
@@ -21,6 +21,7 @@ import { ResultListComponent } from './components/result/result-list.component';
 import { ResultEditComponent } from './components/result/result-edit.component';
 import { QuizSearchComponent } from './components/quiz/quiz-search.component';
 import { AuthService } from './services/auth.service';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
     declarations: [
@@ -44,7 +45,7 @@ import { AuthService } from './services/auth.service';
     imports: [
         CommonModule,
         HttpClientModule,
-        FormsModule, 
+        FormsModule,
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -63,8 +64,13 @@ import { AuthService } from './services/auth.service';
             { path: '**', component: PageNotFoundComponent }
         ])
     ],
-    providers:[
-        AuthService    
+    providers: [
+        AuthService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
     ]
 })
 export class AppModuleShared {

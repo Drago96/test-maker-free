@@ -1,11 +1,12 @@
 ﻿import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'quiz',
-    templateUrl:'./quiz.component.html',
-    styleUrls:['./quiz.component.css']
+    templateUrl: './quiz.component.html',
+    styleUrls: ['./quiz.component.css']
 })
 export class QuizComponent {
     quiz: Quiz;
@@ -13,7 +14,8 @@ export class QuizComponent {
     constructor(private http: HttpClient,
         private activatedRoute: ActivatedRoute,
         private router: Router,
-        @Inject('BASE_URL') private baseUrl:string) {
+        public auth: AuthService,
+        @Inject('BASE_URL') private baseUrl: string) {
 
         this.quiz = <Quiz>{};
 
@@ -23,8 +25,8 @@ export class QuizComponent {
             const url = `${baseUrl}api/quiz/${id}`;
 
             this.http.get<Quiz>(url).subscribe(result => {
-                    this.quiz = result;
-                },
+                this.quiz = result;
+            },
                 error => console.error(error));
 
         } else {
@@ -41,9 +43,9 @@ export class QuizComponent {
             const url = this.baseUrl + `api/quiz/${this.quiz.Id}`;
             this.http.delete(url)
                 .subscribe(result => {
-                        this.router.navigate(['home']);
-                    },
-                    error => console.error(error));
+                    this.router.navigate(['home']);
+                },
+                error => console.error(error));
         }
     }
 }
