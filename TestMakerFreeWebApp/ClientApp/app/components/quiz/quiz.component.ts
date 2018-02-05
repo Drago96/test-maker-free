@@ -16,7 +16,6 @@ export class QuizComponent {
         private router: Router,
         public auth: AuthService,
         @Inject('BASE_URL') private baseUrl: string) {
-
         this.quiz = <Quiz>{};
 
         const id = +this.activatedRoute.snapshot.params["id"];
@@ -28,14 +27,13 @@ export class QuizComponent {
                 this.quiz = result;
             },
                 error => console.error(error));
-
         } else {
             this.router.navigate(['home']);
         }
     }
 
     onEdit() {
-        this.router.navigate(["quiz/edit", this.quiz.Id]);
+        this.router.navigate(['quiz/edit', this.quiz.Id]);
     }
 
     onDelete() {

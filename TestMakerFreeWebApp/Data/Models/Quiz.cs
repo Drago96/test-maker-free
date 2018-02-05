@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TestMakerFreeWebApp.Data.Models
 {
     public class Quiz
     {
         #region Constructor
+
         public Quiz()
         {
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Properties
+
         [Key]
         [Required]
         public int Id { get; set; }
@@ -48,11 +49,10 @@ namespace TestMakerFreeWebApp.Data.Models
         [Required]
         public DateTime LastModifiedDate { get; set; }
 
-
-
-        #endregion
+        #endregion Properties
 
         #region Lazy-Load Properties
+
         /// <summary>
         /// The quiz author: it will be loaded
         /// on first use thanks to the EF Lazy-Loading feature.
@@ -72,6 +72,6 @@ namespace TestMakerFreeWebApp.Data.Models
         /// </summary>
         public virtual List<Result> Results { get; set; }
 
-        #endregion
+        #endregion Lazy-Load Properties
     }
 }

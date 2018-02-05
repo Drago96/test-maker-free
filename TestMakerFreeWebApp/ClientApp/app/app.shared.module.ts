@@ -6,22 +6,23 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
-import { QuizListComponent } from "./components/quiz/quiz-list.component";
-import { QuizComponent } from "./components/quiz/quiz.component";
-import { AboutComponent } from "./components/about/about.component";
-import { HomeComponent } from "./components/home/home.component";
-import { PageNotFoundComponent } from "./components/pagenotfound/pagenotfound.component";
+import { QuizListComponent } from './components/quiz/quiz-list.component';
+import { QuizComponent } from './components/quiz/quiz.component';
+import { AboutComponent } from './components/about/about.component';
+import { HomeComponent } from './components/home/home.component';
+import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { QuizEditComponent } from './components/quiz/quiz-edit.component';
 import { LoginComponent } from './components/login/login.component';
-import { QuestionListComponent } from "./components/question/question-list.component";
-import { QuestionEditComponent } from "./components/question/question-edit.component";
+import { QuestionListComponent } from './components/question/question-list.component';
+import { QuestionEditComponent } from './components/question/question-edit.component';
 import { AnswerListComponent } from './components/answer/answer-list.component';
-import { AnswerEditComponent } from "./components/answer/answer-edit.component";
+import { AnswerEditComponent } from './components/answer/answer-edit.component';
 import { ResultListComponent } from './components/result/result-list.component';
 import { ResultEditComponent } from './components/result/result-edit.component';
 import { QuizSearchComponent } from './components/quiz/quiz-search.component';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthResponseInterceptor } from './services/auth.response.interceptor';
 
 @NgModule({
     declarations: [
@@ -69,6 +70,11 @@ import { AuthInterceptor } from './services/auth.interceptor';
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthResponseInterceptor,
             multi: true
         }
     ]

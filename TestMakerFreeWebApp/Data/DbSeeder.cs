@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TestMakerFreeWebApp.Data.Models;
 
 namespace TestMakerFreeWebApp.Data
@@ -12,6 +10,7 @@ namespace TestMakerFreeWebApp.Data
     public class DbSeeder
     {
         #region Public Methods
+
         public static void Seed(ApplicationDbContext dbContext,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager)
@@ -19,16 +18,18 @@ namespace TestMakerFreeWebApp.Data
             // Create default Users (if there are none)
             if (!dbContext.Users.Any())
             {
-            CreateUsers(dbContext,roleManager,userManager)
-                    .GetAwaiter()
-                    .GetResult();
+                CreateUsers(dbContext, roleManager, userManager)
+                        .GetAwaiter()
+                        .GetResult();
             }
             // Create default Quizzes (if there are none) together with their set of Q & A
             if (!dbContext.Quizzes.Any()) CreateQuizzes(dbContext);
         }
-        #endregion
+
+        #endregion Public Methods
 
         #region Seed Methods
+
         private static async Task CreateUsers(ApplicationDbContext dbContext,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager)
@@ -204,9 +205,11 @@ namespace TestMakerFreeWebApp.Data
             // persist the changes on the Database
             dbContext.SaveChanges();
         }
-        #endregion
+
+        #endregion Seed Methods
 
         #region Utility Methods
+
         /// <summary>
         /// Creates a sample quiz and add it to the Database
         /// together with a sample set of questions, answers & results.
@@ -277,7 +280,6 @@ namespace TestMakerFreeWebApp.Data
             dbContext.SaveChanges();
         }
 
-
-        #endregion
+        #endregion Utility Methods
     }
 }

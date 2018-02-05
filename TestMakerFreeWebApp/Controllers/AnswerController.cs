@@ -1,22 +1,19 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using TestMakerFreeWebApp.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
+using TestMakerFreeWebApp.ViewModels;
 
 namespace TestMakerFreeWebApp.Controllers
 {
     public class AnswerController : BaseApiController
     {
-
         #region Constructor
 
         public AnswerController(ApplicationDbContext db,
@@ -26,9 +23,10 @@ namespace TestMakerFreeWebApp.Controllers
         {
         }
 
-        #endregion
+        #endregion Constructor
 
         #region RESTful conventions methods
+
         /// <summary>
         /// Retrieves the Answer with the given {id}
         /// </summary>
@@ -102,9 +100,7 @@ namespace TestMakerFreeWebApp.Controllers
             // handle requests asking for non-existing answers
             if (answer == null)
             {
-
                 return NotFound($"Answer {model.Id} has not been found");
-
             }
 
             // handle the update (without object-mapping)
@@ -152,9 +148,9 @@ namespace TestMakerFreeWebApp.Controllers
 
             // return an HTTP Status 200 (OK).
             return Ok();
-
         }
-        #endregion
+
+        #endregion RESTful conventions methods
 
         // GET api/answer/all
         [HttpGet("all/{questionId}")]
@@ -169,4 +165,4 @@ namespace TestMakerFreeWebApp.Controllers
                 this.JsonSettings);
         }
     }
-}
+}

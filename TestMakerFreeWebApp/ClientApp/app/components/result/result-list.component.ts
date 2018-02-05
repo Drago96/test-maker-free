@@ -30,8 +30,8 @@ export class ResultListComponent implements OnChanges {
     loadData() {
         const url = this.baseUrl + `api/result/all/${this.quiz.Id}`;
         this.http.get<Result[]>(url).subscribe(result => {
-                this.results = result;
-            },
+            this.results = result;
+        },
             error => console.error(error));
     }
 
@@ -44,11 +44,11 @@ export class ResultListComponent implements OnChanges {
     }
 
     onDelete(result: Result) {
-        if (confirm("Do you really want to delete this result?")) {
+        if (confirm('Do you really want to delete this result?')) {
             const url = this.baseUrl + `api/result/${result.Id}`;
             this.http.delete(url).subscribe(res => {
-                    this.loadData();
-                },
+                this.loadData();
+            },
                 error => console.error(error));
         }
     }

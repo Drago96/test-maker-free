@@ -11,9 +11,10 @@ using TestMakerFreeWebApp.Data;
 namespace TestMakerFreeWebApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180205132800_AddedTokens")]
+    partial class AddedTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,8 +322,6 @@ namespace TestMakerFreeWebApp.Data.Migrations
                         .IsRequired();
 
                     b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int>("Type");
 
                     b.Property<string>("UserId")
                         .IsRequired();

@@ -1,33 +1,32 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using TestMakerFreeWebApp.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
+using TestMakerFreeWebApp.ViewModels;
 
 namespace TestMakerFreeWebApp.Controllers
 {
     public class QuestionController : BaseApiController
     {
-
         #region Constructor
 
         public QuestionController(ApplicationDbContext db,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration) : base(db, roleManager, userManager, configuration)
-        { 
+        {
         }
 
-        #endregion
+        #endregion Constructor
 
         #region RESTful conventions methods
+
         /// <summary>
         /// Retrieves the Question with the given {id}
         /// </summary>
@@ -74,7 +73,6 @@ namespace TestMakerFreeWebApp.Controllers
             return new JsonResult(
                 question.Adapt<QuestionViewModel>(),
                 this.JsonSettings);
-
         }
 
         /// <summary>
@@ -136,7 +134,8 @@ namespace TestMakerFreeWebApp.Controllers
 
             return Ok();
         }
-        #endregion
+
+        #endregion RESTful conventions methods
 
         // GET api/question/all
         [HttpGet("all/{quizId}")]

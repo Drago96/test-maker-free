@@ -6,13 +6,12 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class AuthService {
-    authKey: string = "auth";
-    clientId: string = "TestMakerFree";
+    authKey: string = 'auth';
+    clientId: string = 'TestMakerFree';
 
     constructor(private http: HttpClient,
         @Inject('BASE_URL') private baseUrl: string,
         @Inject(PLATFORM_ID) private platformId: any) {
-
     }
 
     login(username: string, password: string): Observable<boolean> {
@@ -25,20 +24,33 @@ export class AuthService {
             scope: 'offline_access profile email'
         };
 
-        return this.http.post<TokenResponse>(url, data)
-            .map((res) => {
-                const token = res && res.token;
+        return this.getAuthFromServer(url, data);
+    }
 
+    // try to refresh the token
+    refreshToken(): Observable<boolean> {
+        const url = this.baseUrl + 'api/token/auth';
+        const data = {
+            client_id: this.clientId,
+            grant_type: 'refresh_token',
+            refresh_token: this.getAuth()!.refresh_token,
+            scope: 'offline_access profile email'
+        };
+
+        return this.getAuthFromServer(url, data);
+    }
+
+    getAuthFromServer(url: string, data: any): Observable<boolean> {
+        return this.http.post<TokenResponse>(url, data)
+            .map(res => {
+                const token = res && res.token;
                 if (token) {
                     this.setAuth(res);
                     return true;
                 }
 
                 return Observable.throw('Unauthorized');
-            })
-            .catch(error => {
-                return Observable.throw(error);
-            });
+            }).catch(error => Observable.throw(error));
     }
 
     logOut(): boolean {
@@ -60,7 +72,6 @@ export class AuthService {
         return true;
     }
 
-
     getAuth(): TokenResponse | null {
         if (isPlatformBrowser(this.platformId)) {
             const auth = localStorage.getItem(this.authKey);
@@ -77,5 +88,4 @@ export class AuthService {
         }
         return false;
     }
-
 }

@@ -23,13 +23,13 @@ export class QuizListComponent implements OnInit {
         let url = this.baseUrl + 'api/quiz/';
 
         switch (this.class) {
-            case "byTitle":
-                this.title = "Quizzes by Title";
-                url += "byTitle/";
+            case 'byTitle':
+                this.title = 'Quizzes by Title';
+                url += 'byTitle/';
                 break;
-            case "random":
-                this.title = "Random Quizzes";
-                url += "random/";
+            case 'random':
+                this.title = 'Random Quizzes';
+                url += 'random/';
                 break;
 
             case 'latest':

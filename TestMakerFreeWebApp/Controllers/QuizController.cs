@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
@@ -18,7 +15,6 @@ namespace TestMakerFreeWebApp.Controllers
 {
     public class QuizController : BaseApiController
     {
-
         #region Constructor
 
         public QuizController(ApplicationDbContext db,
@@ -28,9 +24,10 @@ namespace TestMakerFreeWebApp.Controllers
         {
         }
 
-        #endregion
+        #endregion Constructor
 
         #region RESTful conventions methods
+
         /// <summary>
         /// GET: api/quiz/{id}
         /// Retrieves the Quiz with the given {id}
@@ -163,12 +160,14 @@ namespace TestMakerFreeWebApp.Controllers
 
             // return an HTTP Status 200 (OK).
             return Ok();
-
         }
-        #endregion
+
+        #endregion RESTful conventions methods
 
         // GET: api/latest
+
         #region Attribute-based routing methods
+
         /// <summary>
         /// GET: api/quiz/latest
         /// Retrieves the {num} latest Quizzes
@@ -226,8 +225,7 @@ namespace TestMakerFreeWebApp.Controllers
                 random.Adapt<List<QuizViewModel>>(),
                 this.JsonSettings);
         }
-        #endregion
 
-
+        #endregion Attribute-based routing methods
     }
 }

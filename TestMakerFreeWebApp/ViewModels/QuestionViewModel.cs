@@ -1,20 +1,22 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+
 namespace TestMakerFreeWebApp.ViewModels
 {
     [JsonObject(MemberSerialization.OptOut)]
     public class QuestionViewModel
     {
         #region Constructor
+
         public QuestionViewModel()
         {
         }
-        #endregion
+
+        #endregion Constructor
+
         #region Properties
+
         public int Id { get; set; }
 
         public int QuizId { get; set; }
@@ -33,6 +35,7 @@ namespace TestMakerFreeWebApp.ViewModels
         public DateTime CreatedDate { get; set; }
 
         public DateTime LastModifiedDate { get; set; }
-        #endregion
+
+        #endregion Properties
     }
 }

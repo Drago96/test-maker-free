@@ -3,4 +3,4 @@
     QuestionId: number;
     Text: string;
     Value: number;
-}
+}

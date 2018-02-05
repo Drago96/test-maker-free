@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace TestMakerFreeWebApp.ViewModels
 {
@@ -11,13 +8,15 @@ namespace TestMakerFreeWebApp.ViewModels
     public class ResultViewModel
     {
         #region Constructor
+
         public ResultViewModel()
         {
-
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Properties
+
         public int Id { get; set; }
 
         public int QuizId { get; set; }
@@ -40,6 +39,6 @@ namespace TestMakerFreeWebApp.ViewModels
         public DateTime CreatedDate { get; set; }
 
         public DateTime LastModifiedDate { get; set; }
-        #endregion
+        #endregion Properties
     }
 }

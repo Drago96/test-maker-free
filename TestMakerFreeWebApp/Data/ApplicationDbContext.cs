@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TestMakerFreeWebApp.Data.Models;
 
@@ -11,19 +7,26 @@ namespace TestMakerFreeWebApp.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         #region Constructor
+
         public ApplicationDbContext(DbContextOptions options) :
             base(options)
         {
         }
+
         #endregion Constructor
 
         #region Methods
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ApplicationUser>().ToTable("Users");
             modelBuilder.Entity<ApplicationUser>().HasMany(u =>
                 u.Quizzes).WithOne(i => i.User);
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Tokens)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId);
 
             modelBuilder.Entity<Quiz>().ToTable("Quizzes");
             modelBuilder.Entity<Quiz>().Property(i =>
@@ -52,14 +55,24 @@ namespace TestMakerFreeWebApp.Data
                 i.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Result>().HasOne(i =>
                 i.Quiz).WithMany(u => u.Results);
+
+            modelBuilder.Entity<Token>().ToTable("Tokens");
+            modelBuilder.Entity<Token>().Property(t => t.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Token>().HasOne(t => t.User)
+                .WithMany(u => u.Tokens)
+                .HasForeignKey(t => t.UserId);
         }
+
         #endregion Methods
 
         #region Properties
+
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Result> Results { get; set; }
+        public DbSet<Token> Tokens { get; set; }
+
         #endregion Properties
     }
 }

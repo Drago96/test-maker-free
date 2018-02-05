@@ -20,7 +20,6 @@ export class AnswerEditComponent {
         private fb: FormBuilder,
         private router: Router,
         @Inject('BASE_URL') private baseUrl: string) {
-
         this.answer = <Answer>{};
         this.createForm();
 
@@ -35,13 +34,12 @@ export class AnswerEditComponent {
             this.http.get<Answer>(url).subscribe(result => {
                 this.answer = result;
                 this.updateForm();
-                },
+            },
                 error => console.error(error));
         } else {
             this.answer.QuestionId = id;
             this.title = 'Create a new Answer';
         }
-
     }
 
     onSubmit(answer: Answer) {

@@ -22,7 +22,6 @@ export class QuizEditComponent {
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         @Inject('BASE_URL') private baseUrl: string) {
-
         this.quiz = <Quiz>{};
 
         this.createForm();
@@ -41,7 +40,7 @@ export class QuizEditComponent {
             });
         } else {
             this.editMode = false;
-            this.title = "Create a new Quiz";
+            this.title = 'Create a new Quiz';
         }
     }
 
@@ -108,5 +107,4 @@ export class QuizEditComponent {
         const control = this.getFormControl(name);
         return control && (control.dirty || control.touched);
     }
-
-}
+}

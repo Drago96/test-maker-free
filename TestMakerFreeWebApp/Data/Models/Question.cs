@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TestMakerFreeWebApp.Data.Models
 {
     public class Question
     {
         #region Constructor
+
         public Question()
         {
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Properties
+
         [Key]
         [Required]
         public int Id { get; set; }
@@ -40,18 +41,22 @@ namespace TestMakerFreeWebApp.Data.Models
 
         [Required]
         public DateTime LastModifiedDate { get; set; }
-        #endregion
+
+        #endregion Properties
 
         #region Lazy-Load Properties
+
         /// <summary>
         /// The parent quiz.
         /// </summary>
         [ForeignKey("QuizId")]
         public virtual Quiz Quiz { get; set; }
+
         /// <summary>
         /// A list containing all the answer related to this question.
         /// </summary>
         public virtual List<Answer> Answers { get; set; }
-        #endregion
+
+        #endregion Lazy-Load Properties
     }
 }

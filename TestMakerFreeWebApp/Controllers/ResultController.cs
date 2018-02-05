@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
@@ -19,15 +15,18 @@ namespace TestMakerFreeWebApp.Controllers
     public class ResultController : BaseApiController
     {
         #region Constructor
+
         public ResultController(ApplicationDbContext db,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration) : base(db, roleManager, userManager, configuration)
         {
         }
-        #endregion
+
+        #endregion Constructor
 
         #region RESTful conventions methods
+
         /// <summary>
         /// GET: api/result/{id}
         /// Retrieves the Result with the given {id}
@@ -115,7 +114,7 @@ namespace TestMakerFreeWebApp.Controllers
             result.Notes = model.Notes;
 
             // properties set from server-side
-            result.LastModifiedDate =DateTime.UtcNow;
+            result.LastModifiedDate = DateTime.UtcNow;
 
             // persist the changes into the Database.
             this.Db.SaveChanges();
@@ -152,7 +151,8 @@ namespace TestMakerFreeWebApp.Controllers
             // return an HTTP Status 200 (OK).
             return Ok();
         }
-        #endregion
+
+        #endregion RESTful conventions methods
 
         // GET api/question/all
         [HttpGet("All/{quizId}")]
@@ -167,5 +167,4 @@ namespace TestMakerFreeWebApp.Controllers
                 this.JsonSettings);
         }
     }
-
 }

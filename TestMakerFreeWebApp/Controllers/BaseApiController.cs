@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -31,7 +27,7 @@ namespace TestMakerFreeWebApp.Controllers
             };
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Shared Properties
 
@@ -41,6 +37,6 @@ namespace TestMakerFreeWebApp.Controllers
         protected UserManager<ApplicationUser> UserManager { get; private set; }
         protected IConfiguration Configuration { get; private set; }
 
-        #endregion
+        #endregion Shared Properties
     }
 }

@@ -20,7 +20,6 @@ export class QuestionEditComponent {
         private fb: FormBuilder,
         private router: Router,
         @Inject('BASE_URL') private baseUrl: string) {
-
         this.question = <Question>{};
 
         this.createForm();
@@ -35,14 +34,13 @@ export class QuestionEditComponent {
             const url = this.baseUrl + `api/question/${id}`;
             this.http.get<Question>(url).subscribe(result => {
                 this.question = result;
-                    this.updateForm();
-                },
+                this.updateForm();
+            },
                 error => console.error(error));
         } else {
             this.question.QuizId = id;
             this.title = 'Create a new Question';
         }
-
     }
 
     onSubmit(question: Question) {

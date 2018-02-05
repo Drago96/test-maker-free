@@ -30,8 +30,8 @@ export class QuestionListComponent implements OnChanges {
     loadData() {
         const url = this.baseUrl + `api/question/all/${this.quiz.Id}`;
         this.http.get<Question[]>(url).subscribe(result => {
-                this.questions = result;
-            },
+            this.questions = result;
+        },
             error => console.error(error));
     }
 
@@ -44,11 +44,11 @@ export class QuestionListComponent implements OnChanges {
     }
 
     onDelete(question: Question) {
-        if (confirm("Do you really want to delete this question?")) {
+        if (confirm('Do you really want to delete this question?')) {
             const url = this.baseUrl + `api/question/${question.Id}`;
             this.http.delete(url).subscribe(res => {
-                    this.loadData();
-                },
+                this.loadData();
+            },
                 error => console.error(error));
         }
     }

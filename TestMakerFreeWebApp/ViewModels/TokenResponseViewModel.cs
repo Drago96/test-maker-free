@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace TestMakerFreeWebApp.ViewModels
 {
@@ -10,14 +6,19 @@ namespace TestMakerFreeWebApp.ViewModels
     public class TokenResponseViewModel
     {
         #region Constructor
+
         public TokenResponseViewModel()
         {
         }
-        #endregion
+
+        #endregion Constructor
+
         #region Properties
+
         public string token { get; set; }
         public int expiration { get; set; }
+        public string refresh_token { get; set; }
 
-        #endregion
+        #endregion Properties
     }
 }
