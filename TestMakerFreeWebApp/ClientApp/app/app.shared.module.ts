@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { QuizEditComponent } from './components/quiz/quiz-edit.component';
 import { LoginComponent } from './components/login/login.component';
+import {RegisterComponent} from './components/user/register.component';
 import { QuestionListComponent } from './components/question/question-list.component';
 import { QuestionEditComponent } from './components/question/question-edit.component';
 import { AnswerListComponent } from './components/answer/answer-list.component';
@@ -41,7 +42,8 @@ import { AuthResponseInterceptor } from './services/auth.response.interceptor';
         AnswerEditComponent,
         ResultListComponent,
         ResultEditComponent,
-        QuizSearchComponent
+        QuizSearchComponent,
+        RegisterComponent
     ],
     imports: [
         CommonModule,
@@ -62,6 +64,7 @@ import { AuthResponseInterceptor } from './services/auth.response.interceptor';
             { path: 'result/edit/:id', component: ResultEditComponent },
             { path: 'about', component: AboutComponent },
             { path: 'login', component: LoginComponent },
+            { path: 'register', component: RegisterComponent},
             { path: '**', component: PageNotFoundComponent }
         ])
     ],
