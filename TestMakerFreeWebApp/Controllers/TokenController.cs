@@ -3,11 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Newtonsoft.Json;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
@@ -45,6 +50,87 @@ namespace TestMakerFreeWebApp.Controllers
 
                 default:
                     return Unauthorized();
+            }
+        }
+
+        [HttpPost("Facebook")]
+        public async Task<IActionResult> Facebook([FromBody] ExternalLoginRequestViewModel model)
+        {
+            try
+            {
+                const string fbApiUrl = "https://graph.facebook.com/v2.10/";
+                var fbApiQueryString = $"me?scope=email&access_token={model.access_token}&fields=id,name,email";
+                string result = null;
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(fbApiUrl);
+                    var response = await client.GetAsync(fbApiQueryString);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        result = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        throw new AuthenticationException();
+                    }
+                }
+
+                var epInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
+                var info = new UserLoginInfo("facebook", epInfo["id"], "Facebook");
+
+                var user = await this.UserManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+
+                if (user == null)
+                {
+                    user = await this.UserManager.FindByEmailAsync(epInfo["email"]);
+
+                    if (user == null)
+                    {
+                        DateTime now = DateTime.UtcNow;
+                        var username = $"FB{epInfo["id"]}{Guid.NewGuid()}";
+                        user = new ApplicationUser
+                        {
+                            UserName = username,
+                            CreatedDate = now,
+                            SecurityStamp = Guid.NewGuid().ToString(),
+                            Email = epInfo["email"],
+                            DisplayName = epInfo["name"],
+                            LastModifiedDate = now
+                        };
+
+                        await this.UserManager.CreateAsync(user, DataHelper.GenerateRandomPassword());
+                        await this.UserManager.AddToRoleAsync(user, "RegisteredUser");
+
+                        user.EmailConfirmed = true;
+                        user.LockoutEnabled = false;
+
+                        this.Db.SaveChanges();
+                    }
+
+                    var ir = await this.UserManager.AddLoginAsync(user, info);
+                    if (ir.Succeeded)
+                    {
+                        this.Db.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new AuthenticationException();
+                    }
+                }
+
+                var rt = this.CreateRefreshToken(model.client_id, user.Id);
+
+                this.Db.Tokens.Add(rt);
+                this.Db.SaveChanges();
+
+                var token = this.CreateAccessToken(user.Id, rt.Value);
+                return Json(token);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 
