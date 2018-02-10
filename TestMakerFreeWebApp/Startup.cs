@@ -72,6 +72,11 @@ namespace TestMakerFreeWebApp
                         ValidateIssuerSigningKey = true,
                         ValidateAudience = true
                     };
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = Configuration["Auth:Facebook:AppId"];
+                    options.AppSecret = Configuration["Auth:Facebook:AppSecret"];
                 });
         }
 

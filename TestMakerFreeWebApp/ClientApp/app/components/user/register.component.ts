@@ -16,7 +16,6 @@ export class RegisterComponent {
         private router: Router,
         private http: HttpClient,
         @Inject('BASE_URL') private baseUrl: string) {
-
         this.title = 'New User Registration';
 
         this.createForm();
@@ -24,12 +23,12 @@ export class RegisterComponent {
 
     createForm() {
         this.form = this.fb.group({
-                Username: ['', Validators.required],
-                Email: ['', [Validators.required, Validators.email]],
-                Password: ['', Validators.required],
-                PasswordConfirm: ['', Validators.required],
-                DisplayName: ['', Validators.required]
-            },
+            Username: ['', Validators.required],
+            Email: ['', [Validators.required, Validators.email]],
+            Password: ['', Validators.required],
+            PasswordConfirm: ['', Validators.required],
+            DisplayName: ['', Validators.required]
+        },
             {
                 validator: this.passwordConfirmValidator
             });
@@ -48,16 +47,15 @@ export class RegisterComponent {
         this.http
             .post<User>(url, tempUser)
             .subscribe(res => {
-                    if (res) {
-                        this.router.navigate(['login']);
-                    } else {
-                        this.form.setErrors({
-                            'register': 'User registration failed.'
-                        });
-                    }
-                },
-                error => console.error(error));
-
+                if (res) {
+                    this.router.navigate(['login']);
+                } else {
+                    this.form.setErrors({
+                        'register': 'User registration failed.'
+                    });
+                }
+            },
+            error => console.error(error));
     }
 
     onBack() {

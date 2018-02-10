@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,8 +12,6 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using Newtonsoft.Json;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
@@ -21,16 +20,138 @@ namespace TestMakerFreeWebApp.Controllers
 {
     public class TokenController : BaseApiController
     {
+        private readonly SignInManager<ApplicationUser> signInManager;
+
         #region Constructor
 
         public TokenController(ApplicationDbContext db,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration) : base(db, roleManager, userManager, configuration)
         {
+            this.signInManager = signInManager;
         }
 
         #endregion Constructor
+
+        [HttpGet("externalLogin/{provider}")]
+        public IActionResult ExternalLogin(string provider, string returnUrl =
+            null)
+        {
+            switch (provider.ToLower())
+            {
+                case "facebook":
+                    // case "google":
+                    // case "twitter":
+                    // todo: add all supported providers here
+                    // Redirect the request to the external provider.
+                    var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Token", new { returnUrl });
+                    var properties =
+                        this.signInManager.ConfigureExternalAuthenticationProperties(
+                            provider,
+                            redirectUrl);
+                    return Challenge(properties, provider);
+
+                default:
+                    // provider not supported
+                    return BadRequest(new
+                    {
+                        Error = String.Format("Provider '{0}' is not supported.", provider)
+                    });
+            }
+        }
+
+        [HttpGet("externalLoginCallback")]
+        public async Task<IActionResult> ExternalLoginCallback(
+            string returnUrl = null, string remoteError = null)
+        {
+            if (!String.IsNullOrEmpty(remoteError))
+            {
+                // TODO: handle external provider errors
+                throw new Exception(String.Format("External Provider error: {0}", remoteError));
+            }
+            // Extract the login info obtained from the External Provider
+            var info = await this.signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                // if there's none, emit an error
+                throw new Exception("ERROR: No login info available.");
+            }
+            // Check if this user already registered himself with this external provider before
+            var user = await UserManager.FindByLoginAsync(info.LoginProvider,
+                info.ProviderKey);
+            if (user == null)
+            {
+                // If we reach this point, it means that this user never tried to logged in
+                // using this external provider. However, it could have used other providers
+                // and /or have a local account.
+                // We can find out if that's the case by looking for his e-mail address.
+                // Retrieve the 'emailaddress' claim
+                var emailKey =
+                    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+                var email = info.Principal.FindFirst(emailKey).Value;
+                // Lookup if there's an username with this e-mail address in the Db
+                user = await UserManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    // No user has been found: register a new user
+                    // using the info retrieved from the provider
+                    DateTime now = DateTime.UtcNow;
+                    // Create a unique username using the 'nameidentifier' claim
+                    var idKey = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+                    var username = String.Format("{0}{1}{2}",
+                        info.LoginProvider,
+                        info.Principal.FindFirst(idKey).Value,
+                        Guid.NewGuid().ToString("N"));
+                    user = new ApplicationUser()
+                    {
+                        SecurityStamp = Guid.NewGuid().ToString(),
+                        UserName = username,
+                        Email = email,
+                        CreatedDate = now,
+                        LastModifiedDate = now
+                    };
+                    // Add the user to the Db with a random password
+                    await UserManager.CreateAsync(
+                        user,
+                        DataHelper.GenerateRandomPassword());
+                    // Assign the user to the 'RegisteredUser' role.
+                    await UserManager.AddToRoleAsync(user, "RegisteredUser");
+                    // Remove Lockout and E-Mail confirmation
+                    user.EmailConfirmed = true;
+                    user.LockoutEnabled = false;
+                    // Persist everything into the Db
+                    await this.Db.SaveChangesAsync();
+                }
+                // Register this external provider to the user
+                var ir = await UserManager.AddLoginAsync(user, info);
+                if (ir.Succeeded)
+                {
+                    // Persist everything into the Db
+                    this.Db.SaveChanges();
+                }
+                else throw new Exception("Authentication error");
+            }
+            // create the refresh token
+            var rt = CreateRefreshToken("TestMakerFree", user.Id);
+            // add the new refresh token to the DB
+            this.Db.Tokens.Add(rt);
+            this.Db.SaveChanges();
+            // create & return the access token
+            var t = CreateAccessToken(user.Id, rt.Value);
+            // output a <SCRIPT> tag to call a JS function
+            // registered into the parent window global scope
+            return Content(
+                "<script type=\"text/javascript\">" +
+                "window.opener.externalProviderLogin(" +
+                JsonConvert.SerializeObject(t, JsonSettings) +
+                ");" +
+                "window.close();" +
+                "</script>",
+                "text/html"
+            );
+        }
 
         [HttpPost("auth")]
         public async Task<IActionResult> Jwt([FromBody] TokenRequestViewModel model)
@@ -53,7 +174,7 @@ namespace TestMakerFreeWebApp.Controllers
             }
         }
 
-        [HttpPost("Facebook")]
+        [HttpPost("facebook")]
         public async Task<IActionResult> Facebook([FromBody] ExternalLoginRequestViewModel model)
         {
             try

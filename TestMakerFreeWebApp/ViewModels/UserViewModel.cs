@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace TestMakerFreeWebApp.ViewModels
 {
@@ -10,15 +6,20 @@ namespace TestMakerFreeWebApp.ViewModels
     public class UserViewModel
     {
         #region Constructor
+
         public UserViewModel()
         {
         }
-        #endregion
+
+        #endregion Constructor
+
         #region Properties
+
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
         public string DisplayName { get; set; }
-        #endregion
+
+        #endregion Properties
     }
 }

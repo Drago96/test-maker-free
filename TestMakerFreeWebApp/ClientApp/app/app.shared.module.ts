@@ -14,6 +14,7 @@ import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.co
 import { QuizEditComponent } from './components/quiz/quiz-edit.component';
 import { LoginComponent } from './components/login/login.component';
 import { LoginFacebookComponent } from './components/login/login.facebook.component';
+import { LoginExternalProvidersComponent } from './components/login/login.externalproviders.component';
 import { RegisterComponent } from './components/user/register.component';
 import { QuestionListComponent } from './components/question/question-list.component';
 import { QuestionEditComponent } from './components/question/question-edit.component';
@@ -45,7 +46,8 @@ import { AuthResponseInterceptor } from './services/auth.response.interceptor';
         ResultEditComponent,
         QuizSearchComponent,
         RegisterComponent,
-        LoginFacebookComponent
+        LoginFacebookComponent,
+        LoginExternalProvidersComponent
     ],
     imports: [
         CommonModule,

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
 namespace TestMakerFreeWebApp.Data
 {
@@ -37,19 +36,19 @@ namespace TestMakerFreeWebApp.Data
             List<char> chars = new List<char>();
             if (opts.RequireUppercase)
             {
-                chars.Insert(rand.Next(0, chars.Count),randomChars[0][rand.Next(0,randomChars[0].Length)]);
+                chars.Insert(rand.Next(0, chars.Count), randomChars[0][rand.Next(0, randomChars[0].Length)]);
             }
             if (opts.RequireLowercase)
             {
-                chars.Insert(rand.Next(0, chars.Count),randomChars[1][rand.Next(0,randomChars[1].Length)]);
+                chars.Insert(rand.Next(0, chars.Count), randomChars[1][rand.Next(0, randomChars[1].Length)]);
             }
             if (opts.RequireDigit)
             {
-                chars.Insert(rand.Next(0, chars.Count),randomChars[2][rand.Next(0,randomChars[2].Length)]);
+                chars.Insert(rand.Next(0, chars.Count), randomChars[2][rand.Next(0, randomChars[2].Length)]);
             }
             if (opts.RequireNonAlphanumeric)
             {
-                chars.Insert(rand.Next(0, chars.Count),randomChars[3][rand.Next(0,randomChars[3].Length)]);
+                chars.Insert(rand.Next(0, chars.Count), randomChars[3][rand.Next(0, randomChars[3].Length)]);
             }
 
             for (int i = chars.Count; i < opts.RequiredLength || chars.Distinct().Count() < opts.RequiredUniqueChars; i++)

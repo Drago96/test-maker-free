@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mapster;
+﻿using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading.Tasks;
 using TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.Data.Models;
 using TestMakerFreeWebApp.ViewModels;
 
 namespace TestMakerFreeWebApp.Controllers
 {
-    public class UserController: BaseApiController
+    public class UserController : BaseApiController
     {
         #region Constructor
 
@@ -24,9 +21,9 @@ namespace TestMakerFreeWebApp.Controllers
             IConfiguration configuration
         ) : base(context, roleManager, userManager, configuration)
         {
-            
         }
-        #endregion
+
+        #endregion Constructor
 
         #region RESTful Conventions
 
@@ -70,10 +67,8 @@ namespace TestMakerFreeWebApp.Controllers
             this.Db.SaveChanges();
 
             return Json(user.Adapt<UserViewModel>(), this.JsonSettings);
-
-
         }
 
-        #endregion
+        #endregion RESTful Conventions
     }
 }

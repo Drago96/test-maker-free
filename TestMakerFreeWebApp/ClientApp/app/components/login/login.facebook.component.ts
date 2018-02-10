@@ -12,14 +12,12 @@ declare let FB: any;
     templateUrl: './login.facebook.component.html'
 })
 export class LoginFacebookComponent implements OnInit {
-
     constructor(private http: HttpClient,
         private router: Router,
         private authService: AuthService,
         private zone: NgZone,
         @Inject(PLATFORM_ID) private platformId: any,
         @Inject('BASE_URL') private baseUrl: string) {
-        
     }
 
     ngOnInit(): void {
@@ -28,7 +26,6 @@ export class LoginFacebookComponent implements OnInit {
         }
 
         if (typeof (FB) === 'undefined') {
-
             window.fbAsyncInit = () =>
 
                 this.zone.run(() => {
@@ -59,14 +56,12 @@ export class LoginFacebookComponent implements OnInit {
                     (<any>js).src = "//connect.facebook.net/en_US/sdk.js";
                     fjs.parentNode!.insertBefore(js, fjs);
                 })(document, 'script', 'facebook-jssdk'));
-
         } else {
             window.FB.XFBML.parse();
 
             FB.getLoginStatus((response: any) => {
                 if (response.status === 'connected') {
                     FB.logout((res: any) => {
-
                     });
                 }
             });
