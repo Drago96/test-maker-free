@@ -61,6 +61,6 @@
     "zone.js": "0.8.19"
   },
   "dependencies": {
-    "npm-check-updates": "^2.14.0"
+    "npm-check-updates": "^16.10.8"
   }
 }
